@@ -2,7 +2,7 @@
 
 APP_NAME := termify
 
-.PHONY: all build run clean tidy fmt test install
+.PHONY: all build run ruclean tidy fmt test install
 
 # Build the binary
 build:
@@ -10,7 +10,7 @@ build:
 
 # Run directly
 run:
-	go run .
+	go run ./cmd
 
 # Format code
 fmt:
