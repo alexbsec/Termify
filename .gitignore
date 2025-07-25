@@ -1,0 +1,39 @@
+# Binaries
+*.out
+
+# Build cache
+*.test
+*.log
+
+# Go build artifacts
+/bin/
+/pkg/
+/dist/
+
+# Dependency cache (if used)
+vendor/
+
+# IDE/editor junk
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+.DS_Store
+
+# OS/Editor temp
+*.tmp
+*.temp
+*.~ 
+*~
+
+# Logs/output
+*.log
+
+# Coverage/test
+coverage.out
+
+# Misc
+asciinema.cast
+.
+
