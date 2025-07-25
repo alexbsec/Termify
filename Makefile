@@ -22,7 +22,7 @@ tidy:
 
 # Run tests (future-proof)
 test:
-	go test ./...
+	go test -cover ./...
 
 # Clean build artifacts
 clean:
