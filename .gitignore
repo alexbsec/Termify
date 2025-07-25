@@ -5,6 +5,10 @@
 *.test
 *.log
 
+# Hidden
+.git/
+.gopath/
+
 # Go build artifacts
 /bin/
 /pkg/
