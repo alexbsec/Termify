@@ -15,7 +15,20 @@ Command StringToCommand(const std::string &s) {
   return Command::UNKNOWN;
 }
 
-Cli::Cli(std::unique_ptr<Mixer> &mixer) : _mixer(mixer) {}
+Cli::Cli(std::unique_ptr<Mixer> &mixer) : _mixer(mixer) {
+  _responseThread = std::thread([this, &mixer]() {
+    while (mixer->GetCtxRef()->playbackCtx->gRunning) {
+      awaitMixerResponse();
+    }
+  });
+  _responseThread.detach();
+}
+
+Cli::~Cli() {
+  if (_responseThread.joinable()) {
+    _responseThread.join();
+  }
+}
 
 void Cli::Run() {
   auto ctx = _mixer->GetCtxRef();
@@ -61,6 +74,25 @@ vector<string> Cli::parseArgs(const string &input) {
     tok.clear();
   }
   return res;
+}
+
+void Cli::awaitMixerResponse() {
+  // here we log the response
+  // this should be async
+  auto ctx = _mixer->GetCtxRef();
+  while (ctx->mResponseCtx->resNotProcessedCount.load() != 0) {
+    std::lock_guard lk(ctx->mResponseCtx->resMtx);
+    if (ctx->mResponseCtx->responses.empty()) continue;
+    auto mixerResponse = ctx->mResponseCtx->responses.front();
+    ctx->mResponseCtx->responses.pop();
+
+    if (mixerResponse.isErr) {
+      // handle
+    }
+    std::cout << mixerResponse.message << std::endl;
+    ctx->mResponseCtx->resNotProcessedCount.store(
+        ctx->mResponseCtx->responses.size());
+  }
 }
 
 } // namespace termify::core

@@ -18,6 +18,7 @@ inline std::unordered_map<Command, uint32_t> cmdMap = {
 class Cli {
 public:
   explicit Cli(std::unique_ptr<Mixer> &mixer);
+  ~Cli();
 
   void Run();
   void WaveformLoop();
@@ -26,10 +27,13 @@ private:
   vector<string> parseArgs(const string &input);
   void drawBar();
   void printLog(const string &msg);
+  
+  void awaitMixerResponse();
 
 private:
   atomic_bool _repeatRequested{false};
   std::unique_ptr<Mixer> &_mixer;
+  std::thread _responseThread;
 };
 
 }

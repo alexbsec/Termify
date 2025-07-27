@@ -4,7 +4,7 @@ namespace termify::app {
 
 Application::Application()
     : _mixer(std::make_unique<core::Mixer>(&_playbackCtx, &_ringBufferCtx,
-                                           &_visualizationCtx)),
+                                           &_visualizationCtx, &_mResponseCtx)),
       _cli(std::make_unique<core::Cli>(_mixer)) {
   _playbackCtx.gRunning = true;
   _ringBufferCtx.ringBuffer.resize(_ringBufferCtx.CHANNELS * _ringBufferCtx.BUFFER_FRAMES);

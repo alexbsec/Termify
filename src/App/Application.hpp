@@ -18,6 +18,7 @@ private:
   core::PlaybackContext _playbackCtx;
   core::RingBufferContext _ringBufferCtx;
   core::VisualizationContext _visualizationCtx;
+  core::MixerResponseContext _mResponseCtx;
   std::unique_ptr<core::Mixer> _mixer;
   std::unique_ptr<core::Cli> _cli;
 };

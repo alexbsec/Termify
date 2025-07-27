@@ -2,12 +2,15 @@
 #define _TERMIFY_CORE_COMMON_HPP
 
 #include "Defines.hpp"
+#include <queue>
 
 namespace termify::core {
 
 struct PlaybackContext;
 struct RingBufferContext;
 struct VisualizationContext;
+struct MixerResponse;
+struct MixerResponseContext;
 
 const int BUFFER_SIZE = 2048;
 
@@ -15,6 +18,7 @@ struct AtomicContext {
   PlaybackContext *playbackCtx;
   RingBufferContext *ringBufferCtx;
   VisualizationContext *visualizationCtx;
+  MixerResponseContext *mResponseCtx;
 };
 
 struct PlaybackContext {
@@ -36,6 +40,19 @@ struct VisualizationContext {
   const int BAR_ROW = 2;
   std::array<int16, BUFFER_SIZE> visBuffer{}; 
   std::mutex visMtx, coutMtx;
+};
+
+struct MixerResponseContext {
+  atomic_uint32 resNotProcessedCount{0};
+  std::queue<MixerResponse> responses;
+  std::mutex resMtx;
+  condition_variable resCv;
+};
+
+struct MixerResponse {
+  int64 id;
+  string message;
+  bool isErr;
 };
 
 } // namespace termify::core

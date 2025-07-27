@@ -1,8 +1,8 @@
 #ifndef _TERMIFY_CORE_MIXER_HPP
 #define _TERMIFY_CORE_MIXER_HPP
 
-#include "Defines.hpp"
 #include "Common.hpp"
+#include "Defines.hpp"
 #include "FFmpegDecoder.hpp"
 
 using AtomicBool = std::atomic<bool>;
@@ -11,23 +11,26 @@ namespace termify::core {
 
 class Mixer {
 public:
-  Mixer(PlaybackContext *pCtx, RingBufferContext *rCtx, VisualizationContext *vCtx);
+  Mixer(PlaybackContext *pCtx, RingBufferContext *rCtx,
+        VisualizationContext *vCtx, MixerResponseContext *mrCtx);
 
-  void Play(const string& song);
+  void Play(const string &song);
   void ToggleRepeat(bool toggle);
   void Stop();
 
-  inline AtomicContext *GetCtxRef() {
-    return &_ctx;
-  }
+  inline AtomicContext *GetCtxRef() { return &_ctx; }
+
+private:
+  void dispatchResponse(const string &msg, bool isErr = false);
 
 private:
   std::unique_ptr<FFmpegDecoder> _decoder;
-  AtomicContext _ctx; 
+  AtomicContext _ctx;
 
   bool _repeatSong = false;
+  int64 _lastResId = 1;
 };
 
-}
+} // namespace termify::core
 
 #endif // _TERMIFY_CORE_MIXER_HPP
