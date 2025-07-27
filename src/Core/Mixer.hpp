@@ -14,6 +14,7 @@ public:
   Mixer(PlaybackContext *pCtx, RingBufferContext *rCtx, VisualizationContext *vCtx);
 
   void Play(const string& song);
+  void ToggleRepeat(bool toggle);
   void Stop();
 
   inline AtomicContext *GetCtxRef() {
@@ -23,6 +24,8 @@ public:
 private:
   std::unique_ptr<FFmpegDecoder> _decoder;
   AtomicContext _ctx; 
+
+  bool _repeatSong = false;
 };
 
 }

@@ -20,8 +20,17 @@ void Mixer::Play(const string &song) {
 
   std::cout << "Playing " << song << "...\n";
   _ctx.playbackCtx->isPlaying = true;
-  _ctx.playbackCtx->playThread =
-      std::thread([this, song]() { _decoder->Stream(song); });
+  _ctx.playbackCtx->shouldStop = false;
+
+  _ctx.playbackCtx->playThread = std::thread([this, song]() {
+    do {
+      std::cout << "Streaming song...\n";
+      _decoder->Stream(song);
+      if (_repeatSong && !_ctx.playbackCtx->shouldStop.load())
+        std::cout << "Repeating song...\n";
+    } while (_repeatSong && !_ctx.playbackCtx->shouldStop.load());
+  });
+
   _ctx.playbackCtx->playThread.detach();
 }
 
@@ -31,11 +40,19 @@ void Mixer::Stop() {
     return;
   }
 
-  _ctx.playbackCtx->shouldStop = true;
+  _ctx.playbackCtx->shouldStop.store(true);
   _ctx.ringBufferCtx->ringCv.notify_all();
   if (_ctx.playbackCtx->playThread.joinable()) {
     _ctx.playbackCtx->playThread.join();
   }
+
+  _repeatSong = false;
+}
+
+void Mixer::ToggleRepeat(bool toggle) { 
+  const string onOrOff = toggle ? "on" : "off";
+  std::cout << "Repeat " <<  onOrOff << std::endl;
+  _repeatSong = toggle; 
 }
 
 } // namespace termify::core

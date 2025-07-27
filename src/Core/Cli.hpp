@@ -6,11 +6,12 @@
 
 namespace termify::core {
 
-enum class Command { EXIT, PLAY, STOP, UNKNOWN };
+enum class Command { EXIT, PLAY, STOP, REPEAT, UNKNOWN };
 inline std::unordered_map<Command, uint32_t> cmdMap = {
     {Command::EXIT, 0},
     {Command::PLAY, 1},
     {Command::STOP, 0},
+    {Command::REPEAT, 0},
     {Command::UNKNOWN, 0},
 };
 
@@ -27,6 +28,7 @@ private:
   void printLog(const string &msg);
 
 private:
+  atomic_bool _repeatRequested{false};
   std::unique_ptr<Mixer> &_mixer;
 };
 

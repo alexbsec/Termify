@@ -10,11 +10,12 @@ Command StringToCommand(const std::string &s) {
     return Command::PLAY;
   if (s == "stop")
     return Command::STOP;
+  if (s == "repeat")
+    return Command::REPEAT;
   return Command::UNKNOWN;
 }
 
-Cli::Cli(std::unique_ptr<Mixer> &mixer) 
-  : _mixer(mixer) {}
+Cli::Cli(std::unique_ptr<Mixer> &mixer) : _mixer(mixer) {}
 
 void Cli::Run() {
   auto ctx = _mixer->GetCtxRef();
@@ -24,19 +25,27 @@ void Cli::Run() {
   if (args.empty())
     return;
 
-  switch (StringToCommand(args[0])) {
+  const string cmdStr = args[0];
+
+  switch (StringToCommand(cmdStr)) {
   case Command::EXIT:
     ctx->playbackCtx->gRunning = false;
     break;
-  case Command::PLAY:
+  case Command::PLAY: {
     if (args.size() != 2) {
       std::cout << "Usage: play \"song name\"\n";
       return;
-    }     
-    _mixer->Play(args[1]);
+    }
+    const string song = args[1];
+    _mixer->Play(song);
     break;
+  }
   case Command::STOP:
     _mixer->Stop();
+    break;
+  case Command::REPEAT:
+    _repeatRequested = !_repeatRequested;
+    _mixer->ToggleRepeat(_repeatRequested);
     break;
   default:
     std::cout << "Unknown command\n";
@@ -54,4 +63,4 @@ vector<string> Cli::parseArgs(const string &input) {
   return res;
 }
 
-}
+} // namespace termify::core
