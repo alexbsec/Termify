@@ -59,7 +59,25 @@ make run
 During development, `yt-dlp` should be located in `./bin/.local/bin/yt-dlp`.  
 In release, it's expected at `/usr/local/share/termify/bin/yt-dlp`.
 
----
+
+## Installing 
+
+To install the latest version, run:
+
+```bash
+git clone https://github.com/alexbsec/termify.git
+cd termify
+chmod +x ./scripts/release.sh
+make install
+```
+
+Now `termify` should be available as a global command, as long as `/usr/local/bin` is in your environment variables. To make sure, run
+
+```bash
+export PATH="/usr/local/bin:$PATH"
+```
+
+---11
 
 ## License
 
