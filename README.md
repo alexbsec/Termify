@@ -19,7 +19,7 @@
 ## 🛠️ Planned Features
 
 - 🎵 Song queueing and repeat modes
-- ⏩ Skip / Pause / Resume playback
+- ⏩ Skip 
 - 🎚️ Volume control
 - 🧠 Intelligent caching
 - 🗂 Playlist support
