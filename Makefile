@@ -1,9 +1,15 @@
-.PHONY: all build
+.PHONY: all build run install
+
+BUILD_DIR := ./bin
+BINARY_NAME := termify
 
 all: build
 
 build:
-	rm -rf ./bin && ./scripts/build.sh
+	rm -rf $(BUILD_DIR) && ./scripts/build.sh
 
 run:
-	./bin/termify
+	$(BUILD_DIR)/$(BINARY_NAME)
+
+install:
+	./scripts/release.sh
