@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-BUILD_DIR="./bin"
+BUILD_DIR="./bin/Release"
 FINAL_INSTALL_DIR="/usr/local/bin"
 FINAL_DEPENDENCY_DIR="/usr/local/share/termify/bin"
 
