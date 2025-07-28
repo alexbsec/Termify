@@ -18,8 +18,10 @@ public:
   void ToggleRepeat(bool toggle);
   void Pause();
   void Resume();
-  void Stop();
+  void Stop(bool force = false);
 
+  inline const string &TrackName() const { return _trackName; }
+  inline bool IsRepeatOn() const { return _repeatSong; }
   inline AtomicContext *GetCtxRef() { return &_ctx; }
 
 private:
@@ -31,6 +33,7 @@ private:
 
   bool _repeatSong = false;
   int64 _lastResId = 1;
+  string _trackName;
 };
 
 } // namespace termify::core

@@ -23,6 +23,7 @@ void Mixer::Play(const string &song) {
 
   std::ostringstream oss;
   oss << "Playing " << song << "...";
+  _trackName = song;
   dispatchResponse(oss.str());
   _ctx.playbackCtx->isPlaying = true;
   _ctx.playbackCtx->shouldStop = false;
@@ -68,20 +69,26 @@ void Mixer::Resume() {
   dispatchResponse("Resuming...");
 }
 
-void Mixer::Stop() {
-  if (!_ctx.playbackCtx->isPlaying) {
+void Mixer::Stop(bool force) {
+  if (!_ctx.playbackCtx->isPlaying && !force) {
     dispatchResponse("Nothing is playing");
     return;
   }
 
+  _trackName = "";
   _ctx.playbackCtx->shouldStop.store(true);
+  _ctx.playbackCtx->isPaused.store(false);
   _ctx.ringBufferCtx->ringCv.notify_all();
+  _ctx.playbackCtx->pauseCv.notify_all(); // unblock pause wait
+
   if (_ctx.playbackCtx->playThread.joinable()) {
     _ctx.playbackCtx->playThread.join();
   }
 
+  _ctx.playbackCtx->isPlaying.store(false);
   _repeatSong = false;
 }
+
 
 void Mixer::ToggleRepeat(bool toggle) {
   const string onOrOff = toggle ? "on" : "off";

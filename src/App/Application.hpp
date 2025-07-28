@@ -12,7 +12,8 @@ public:
 
 private:
   void waveformLoop();
-  void drawBar();
+  void drawStatusBar();
+  void drawWaveformBar();
 
 private:
   core::PlaybackContext _playbackCtx;

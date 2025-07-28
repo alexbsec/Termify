@@ -27,7 +27,6 @@ public:
 
 private:
   vector<string> parseArgs(const string &input);
-  void drawBar();
   void printLog(const string &msg);
   
   void awaitMixerResponse();

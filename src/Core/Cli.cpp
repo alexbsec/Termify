@@ -46,9 +46,12 @@ void Cli::Run() {
   const string cmdStr = args[0];
 
   switch (StringToCommand(cmdStr)) {
-  case Command::EXIT:
+  case Command::EXIT: {
+    const bool forceStop = true;
+    _mixer->Stop(forceStop);
     ctx->playbackCtx->gRunning = false;
     break;
+  }
   case Command::PLAY: {
     if (args.size() != 2) {
       std::cout << "Usage: .p \"song name\"\n";
