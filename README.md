@@ -77,7 +77,7 @@ Now `termify` should be available as a global command, as long as `/usr/local/bi
 export PATH="/usr/local/bin:$PATH"
 ```
 
----11
+---
 
 ## License
 
