@@ -63,7 +63,7 @@ void FFmpegDecoder::Stream(const string &query) {
 string FFmpegDecoder::downloadAudio(const string &query) {
   string source = query;
   if (!std::filesystem::exists(source)) {
-    source = DownloadAudio(query);
+    source = YtDlpManager::Self().DownloadAudioToFile(query);
     _deleteAfter = true;
   }
 

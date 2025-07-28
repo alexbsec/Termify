@@ -1,4 +1,6 @@
 #include "Application.hpp"
+#include "../Core/AudioDownloader.hpp"
+#include <stdexcept>
 
 namespace termify::app {
 
@@ -11,6 +13,9 @@ Application::Application()
 }
 
 void Application::Start() {
+  if (!core::YtDlpManager::Self().Init()) {
+    throw std::runtime_error("Failed to initialize yt-dlp manager");
+  }
   std::cout << "\033[2J\033[H\n\n" << std::flush;
   std::thread viz([this]() { waveformLoop(); });
   while (_playbackCtx.gRunning) {

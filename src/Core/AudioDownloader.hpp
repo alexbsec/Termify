@@ -5,8 +5,26 @@
 
 namespace termify::core {
 
-string DownloadAudio(const string &query);
+class YtDlpManager {
 
-}
+public:
+  static YtDlpManager &Self();
+  bool Init();
+
+  string DownloadAudioToFile(const string &query);
+
+private:
+  YtDlpManager() = default;
+
+  std::filesystem::path getGlobalLocation();
+  std::filesystem::path getYtDlpLocation();
+
+private:
+  std::filesystem::path _executablePath;
+  std::filesystem::path _ytDlpExecutablePath;
+  static bool _initialized;
+};
+
+} // namespace termify::core
 
 #endif // _TERMIFY_INCLUDE_AUDIO_DOWNLOADER_HPP

@@ -3,9 +3,9 @@
 BUILD_DIR="./bin"
 
 if [[ -d "$BUILD_DIR" ]]; then
-    rm -rf ./build
-    mkdir build
-    pushd build > /dev/null
+    rm -rf ./bin
+    mkdir bin
+    pushd bin > /dev/null
     cmake .. 
     popd > /dev/null
 fi
@@ -16,4 +16,6 @@ fi
 
 cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -S . -B "$BUILD_DIR"
 ln -sf "./bin/compile_commands.json" compile_commands.json 
+mkdir -p ./bin/.local/bin
+cp ./ext/yt-dlp ./bin/.local/bin/yt-dlp
 cmake --build "$BUILD_DIR"
