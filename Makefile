@@ -3,7 +3,7 @@
 all: build
 
 build:
-	rm -rf ./bin && ./build.sh
+	rm -rf ./bin && ./scripts/build.sh
 
 run:
 	./bin/termify
