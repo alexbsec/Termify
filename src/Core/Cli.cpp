@@ -39,6 +39,7 @@ void Cli::Run() {
   auto ctx = _mixer->GetCtxRef();
   std::string line;
   std::getline(std::cin, line);
+  std::cout << "\033[1A\033[2K" << std::flush;
   auto args = parseArgs(line);
   if (args.empty())
     return;
@@ -103,7 +104,7 @@ void Cli::awaitMixerResponse() {
     if (mixerResponse.isErr) {
       // handle
     }
-    std::cout << mixerResponse.message << std::endl;
+    //std::cout << mixerResponse.message << std::endl;
     ctx->mResponseCtx->resNotProcessedCount.store(
         ctx->mResponseCtx->responses.size());
   }

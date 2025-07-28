@@ -58,7 +58,6 @@ void FFmpegDecoder::Stream(const string &query) {
 
   _ctx.playbackCtx->shouldStop = false;
   _ctx.playbackCtx->isPlaying = false;
-  std::cout << "Done.\n";
 }
 
 string FFmpegDecoder::downloadAudio(const string &query) {
