@@ -36,34 +36,45 @@ void Application::waveformLoop() {
   }
 }
 
+
 void Application::drawStatusBar() {
-  const int STATUS_ROW = _visualizationCtx.BAR_ROW - 1;
-  const string track = _mixer->TrackName();
-  const string repeat = _mixer->IsRepeatOn() ? "ON" : "OFF";
-  const bool paused = _playbackCtx.isPaused.load();
+  auto &vis = _visualizationCtx;
+  // BAR_ROW is where your waveform lives
+  const int TITLE_ROW  = vis.BAR_ROW - 2;
+  const int STATUS_ROW = vis.BAR_ROW - 1;
 
-  constexpr const char *ANSI_GREEN = "\033[32m";
-  constexpr const char *ANSI_BLUE = "\033[34m";
-  constexpr const char *ANSI_YELLOW = "\033[33m";
-  constexpr const char *ANSI_RESET = "\033[0m";
+  const std::string track  = _mixer->TrackName();
+  const std::string repeat = _mixer->IsRepeatOn() ? "ON" : "OFF";
+  const bool        paused = _playbackCtx.isPaused.load();
 
-  // save cursor, jump to STATUS_ROW, clear line, print, restore
-  std::cout << "\033[s"                              // save cursor
-            << "\033[" << STATUS_ROW << ";1H\033[2K" // move+clear line
-            << "Now playing: " << ANSI_GREEN << track
-            << ANSI_RESET // green track
-            << "    Repeat: " << ANSI_BLUE << repeat
-            << ANSI_RESET // blue repeat
-            << "    Paused: ";
+  constexpr const char* ANSI_BLUE   = "\033[34m";
+  constexpr const char* ANSI_GREEN  = "\033[32m";
+  constexpr const char* ANSI_YELLOW = "\033[33m";
+  constexpr const char* ANSI_RESET  = "\033[0m";
 
+  // 1) Draw title
+  std::cout
+    << "\033[s"                                      // save cursor
+    << "\033[" << TITLE_ROW  << ";1H\033[2K"         // move+clear title row
+    << ANSI_BLUE << "Termify v0.1.0" << ANSI_RESET   // colored title
+    << "\033[u";                                     // restore
+
+  // 2) Draw status
+  std::cout
+    << "\033[s"                                      // save again
+    << "\033[" << STATUS_ROW << ";1H\033[2K"         // move+clear status row
+       << "Now playing: " << ANSI_GREEN << track << ANSI_RESET
+       << "    Repeat: "  << ANSI_BLUE  << repeat << ANSI_RESET
+       << "    Paused: ";
   if (paused)
     std::cout << ANSI_YELLOW << "YES" << ANSI_RESET;
   else
-    std::cout << ANSI_GREEN << "NO" << ANSI_RESET;
-
-  std::cout << "\033[u" // restore cursor
-            << std::flush;
+    std::cout << ANSI_GREEN  << "NO"  << ANSI_RESET;
+  std::cout
+    << "\033[u"                                      // and restore
+    << std::flush;
 }
+
 
 void Application::drawWaveformBar() {
   auto &vis = _visualizationCtx;

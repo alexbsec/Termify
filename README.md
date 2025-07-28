@@ -1,3 +1,4 @@
+![Termify Screenshot](./assets/termify.png)
 # Termify 🎵🖥️
 
 **Termify** is a terminal-based YouTube audio player written in modern C++, featuring a real-time waveform visualizer. It allows you to search and stream audio from YouTube with a minimal, responsive interface powered by FFmpeg and ALSA.  
