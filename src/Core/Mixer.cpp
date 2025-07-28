@@ -16,7 +16,7 @@ Mixer::Mixer(PlaybackContext *pCtx, RingBufferContext *rCtx,
 }
 
 void Mixer::Play(const string &song) {
-  if (_ctx.playbackCtx->isPlaying) {
+  if (_ctx.playbackCtx->isPlaying.load()) {
     dispatchResponse("Already playing");
     return;
   }
@@ -34,6 +34,38 @@ void Mixer::Play(const string &song) {
   });
 
   _ctx.playbackCtx->playThread.detach();
+}
+
+void Mixer::Pause() {
+  if (!_ctx.playbackCtx->isPlaying.load()) {
+    dispatchResponse("Nothing is playing");
+    return;
+  }
+
+  if (_ctx.playbackCtx->isPaused.load()) {
+    dispatchResponse("Already paused");
+    return;
+  }
+
+  _ctx.playbackCtx->isPaused.store(true);
+  dispatchResponse("Pausing...");
+}
+
+void Mixer::Resume() {
+  if (_ctx.playbackCtx->isPlaying.load()) {
+    dispatchResponse("Already playing");
+    return;
+  }
+
+  if (!_ctx.playbackCtx->isPaused.load()) {
+    dispatchResponse("Nothing on pause");
+    return;
+  }
+
+  _ctx.playbackCtx->isPaused.store(false);
+  _ctx.playbackCtx->isPlaying.store(true);
+  _ctx.playbackCtx->pauseCv.notify_all();
+  dispatchResponse("Resuming...");
 }
 
 void Mixer::Stop() {

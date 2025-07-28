@@ -48,6 +48,18 @@ void RingBuffer::Update(AtomicContext &ctx, snd_pcm_t **ppPcm) {
       memcpy(visualCtx->visBuffer.data(), chunk.data(), c * sizeof(int16_t));
     }
 
+    while (playbackCtx->isPaused.load()) {
+      playbackCtx->isPlaying.store(false);
+      std::unique_lock plk(playbackCtx->pauseMtx);
+      playbackCtx->pauseCv.wait(plk, [&]() {
+        return !playbackCtx->isPaused.load() || playbackCtx->shouldStop.load();
+      });
+
+      if (playbackCtx->shouldStop.load()) {
+        return;
+      }
+    }
+
     // write to ALSA (retry on XRUN)
     int frames = toRead / ringBufferCtx->CHANNELS, off = 0;
     while (frames > 0) {

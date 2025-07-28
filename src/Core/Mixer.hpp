@@ -16,6 +16,8 @@ public:
 
   void Play(const string &song);
   void ToggleRepeat(bool toggle);
+  void Pause();
+  void Resume();
   void Stop();
 
   inline AtomicContext *GetCtxRef() { return &_ctx; }

@@ -13,6 +13,7 @@ void FFmpegDecoder::Stream(const string &query) {
   _ctx.ringBufferCtx->readIndex.store(0);
   _ctx.playbackCtx->shouldStop.store(false);
   _ctx.playbackCtx->isPlaying.store(true);
+  _ctx.playbackCtx->isPaused.store(false);
 
   // 1) Download if it's a search term
   const string source = downloadAudio(query);

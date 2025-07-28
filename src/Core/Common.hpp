@@ -22,7 +22,9 @@ struct AtomicContext {
 };
 
 struct PlaybackContext {
-  atomic_bool isPlaying, shouldStop, gRunning;
+  atomic_bool isPlaying, shouldStop, gRunning, isPaused;
+  std::mutex pauseMtx;
+  condition_variable pauseCv;
   std::thread playThread;
 };
 

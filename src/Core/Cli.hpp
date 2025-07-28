@@ -6,12 +6,14 @@
 
 namespace termify::core {
 
-enum class Command { EXIT, PLAY, STOP, REPEAT, UNKNOWN };
+enum class Command { EXIT, PLAY, STOP, REPEAT, PAUSE, RESUME, UNKNOWN };
 inline std::unordered_map<Command, uint32_t> cmdMap = {
     {Command::EXIT, 0},
     {Command::PLAY, 1},
     {Command::STOP, 0},
     {Command::REPEAT, 0},
+    {Command::PAUSE, 0},
+    {Command::RESUME, 0},
     {Command::UNKNOWN, 0},
 };
 

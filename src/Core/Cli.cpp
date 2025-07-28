@@ -4,14 +4,19 @@
 namespace termify::core {
 
 Command StringToCommand(const std::string &s) {
-  if (s == "exit")
+  if (s == "exit" || s == ".q")
     return Command::EXIT;
-  if (s == "play")
+  if (s == "play" || s == ".p")
     return Command::PLAY;
-  if (s == "stop")
+  if (s == "stop" || s == ".s")
     return Command::STOP;
-  if (s == "repeat")
+  if (s == "loop" || s == ".l")
     return Command::REPEAT;
+  if (s == "pause" || s == ".P") 
+    return Command::PAUSE;
+  if (s == "resume" || s == ".r") {
+    return Command::RESUME;
+  }
   return Command::UNKNOWN;
 }
 
@@ -46,7 +51,7 @@ void Cli::Run() {
     break;
   case Command::PLAY: {
     if (args.size() != 2) {
-      std::cout << "Usage: play \"song name\"\n";
+      std::cout << "Usage: .p \"song name\"\n";
       return;
     }
     const string song = args[1];
@@ -59,6 +64,12 @@ void Cli::Run() {
   case Command::REPEAT:
     _repeatRequested = !_repeatRequested;
     _mixer->ToggleRepeat(_repeatRequested);
+    break;
+  case Command::PAUSE:
+    _mixer->Pause();
+    break;
+  case Command::RESUME:
+    _mixer->Resume();
     break;
   default:
     std::cout << "Unknown command\n";
